@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraped Data</title>
+</head>
+<body>
+    <h1>Scraped Data</h1>
+    
+    <!-- Link to trigger the Puppeteer script -->
+    <a href="/run-puppeteer">Run Puppeteer Script</a>
+    
+    <div id="result-container">
+        <!-- Result will be displayed here -->
+    </div>
+
+    <script>
+        // Function to fetch and display the result
+        async function fetchAndDisplayResult() {
+            try {
+                //to Fetch the result from the server
+                const response = await fetch('/get-result');
+                const result = await response.json();
+
+                //   HTML to display the result
+                let html = '<h2>Scraped Data</h2>';
+                html += '<p>Unique ID: ' + result.uniqueID + '</p>';
+                html += '<p>Date and Time: ' + result.dateTime + '</p>';
+                html += '<p>IP Address: ' + result.ipAddress + '</p>';
+                html += '<ul>';
+
+                // Iterate through trending topics and add them to the list
+                result.trendingTopics.forEach(topic => {
+                    html += '<li>' + topic.title + '</li>';
+                });
+
+                html += '</ul>';
+
+                // to display the HTML in the result container
+                document.getElementById('result-container').innerHTML = html;
+            } catch (error) {
+                console.error('Error fetching result:', error);
+            }
+        }
+
+        // Call the fetchAndDisplayResult function when the page loads...
+        fetchAndDisplayResult();
+    </script>
+</body>
+</html>
